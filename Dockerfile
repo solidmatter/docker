@@ -26,8 +26,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
      && apt-get clean \
      && rm -rf /var/lib/apt/lists/*
 
-#ARG GITREF_SOLIDMATTER=develop
-ARG GITREF_SOLIDMATTER=feature/sbSystem_BetterConfigHandling
+ARG GITREF_SOLIDMATTER=develop
 # switch default shell form /bin/sh to /bin/bash to support string replace
 # replace '/' from branch name with '-' ... e.g. feature/fix-a -> feature-fix-a
 SHELL ["/bin/bash", "-c"]
