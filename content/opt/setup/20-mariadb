@@ -2,14 +2,13 @@
 
 . /opt/helpers
 
-echo "=> setup mariadb"
+echo "=> mariadb: setup"
 
 chown -R mysql:mysql /var/lib/mysql
-chown -R mysql:mysql /var/log/mysql
 
 if [ ! "$(ls -A /var/lib/mysql)" ]; then
-	echo "=> MySQL datadir is empty ... initializing"
-	/usb/bin/mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+	echo "=> mariadb: datadir is empty ... initializing"
+	/usr/bin/mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
 fi
 
 #chown -R mysql:mysql /var/run/mysqld
