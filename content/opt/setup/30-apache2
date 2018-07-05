@@ -1,0 +1,11 @@
+#!/bin/bash
+
+. /opt/helpers
+
+echo "=> setup apache2"
+
+chown -R www-data:www-data /var/www
+
+# Enable apache mods.
+a2enmod php7.0
+a2enmod rewrite

@@ -1,0 +1,35 @@
+#!/bin/bash
+
+. /opt/helpers
+
+echo "=> setup solidmatter"
+
+mkdir /var/log/solidmatter
+chown www-data: /var/log/solidmatter
+
+# modify solidmatter apache site config
+sed -i -e "s#@SERVERNAME@#${SOLIDMATTER_SERVERNAME}#g" /etc/apache2/sites-available/solidmatter.conf
+sed -i -e "s#@SERVERALIAS1@#${SOLIDMATTER_SERVERALIAS1}#g" /etc/apache2/sites-available/solidmatter.conf
+sed -i -e "s#@SERVERALIAS2@#${SOLIDMATTER_SERVERALIAS2}#g" /etc/apache2/sites-available/solidmatter.conf
+sed -i -e "s#@SERVERALIAS3@#${JUKEBOX_SERVERNAME}#g" /etc/apache2/sites-available/solidmatter.conf
+
+# Enable apache solidmatter mod.
+a2ensite solidmatter
+
+
+
+#helper_mysql_root << END
+mysql << EOF
+    CREATE DATABASE IF NOT EXISTS ${SOLIDMATTER_MYSQL_DATABASE};
+    GRANT ALL
+      ON ${SOLIDMATTER_MYSQL_DATABASE}.*
+      TO '${SOLIDMATTER_MYSQL_USER}'@'localhost'
+      IDENTIFIED BY '${SOLIDMATTER_MYSQL_PASS}';
+EOF
+
+mysql < /var/www/solidmatter/solidmatter.sql
+
+# modify solidmatter interface config
+sed -i -e "s#@SERVERALIAS1@#${SOLIDMATTER_SERVERALIAS1}#g" /etc/solidmatter/interface.xml
+sed -i -e "s#@SERVERALIAS2@#${SOLIDMATTER_SERVERALIAS2}#g" /etc/solidmatter/interface.xml
+sed -i -e "s#@JUKEBOXSERVERNAME@#${JUKEBOX_SERVERNAME}#g" /etc/solidmatter/interface.xml

@@ -1,0 +1,70 @@
+#!/bin/bash
+
+set -euo pipefail
+
+# If specified value is true, return valid
+# Else return invalid
+#
+# Allows concatenation via && and ||
+helper_evaluate_boolean() {
+	if [ "${1}" == "True" ] || \
+	   [ "${1}" == "true" ] || \
+	   [ "${1}" == "1" ]; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+# Test a server, if the server is available
+# Does not check, if the connection credentials are correct
+helper_mysql_ping() {
+	local host="${1}" port="${2}"
+	echo "Pinging ${host}:${port}"
+	mysqladmin --silent ping "-h${host}" "-P${port}"
+}
+
+# Wait until a MySQL server becomes available
+# Does not check, if the connection credentials are correct
+helper_mysql_wait() {
+	until helper_mysql_ping "${1}" "${2}"; do
+		sleep 1
+	done
+}
+
+helper_mysql_user() {
+	mysql --defaults-group-suffix="${CNFSUFFIX}" "${@}"
+}
+
+helper_mysql_root() {
+	mysql --defaults-group-suffix="${CNFSUFFIX}root" "${@}"
+}
+
+helper_mysql_test_credentials() {
+	mysql --defaults-group-suffix="${CNFSUFFIX}" -e "quit"
+}
+
+helper_mysql_cnf_init_section() {
+	set -u # set and unset it temporarily, until all scripts are fixed to this
+	local section="${1}" host="${2}" port="${3}" user="${4}" db="${5}" password="${6}"
+
+	cat >> $HOME/.my.cnf <<-END
+	[client${section}]
+	host=${host}
+	port=${port}
+	user=${user}
+	database=${db}
+	password=${password}
+	END
+	if [ "${host}" != localhost ]; then
+		cat >> $HOME/.my.cnf <<-END
+		[client${section}root]
+		host=${host}
+		port=${port}
+		user=root
+		password=${MYSQL_ROOT_PASSWORD}
+		END
+	fi
+
+	set +u # set and unset it temporarily, until all scripts are fixed to this
+}

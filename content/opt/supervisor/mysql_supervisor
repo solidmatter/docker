@@ -1,0 +1,11 @@
+#!/bin/bash
+
+. /opt/helpers
+
+# do not start, if no service requires local MySQL
+service mysql start
+
+# Allow any signal which would kill a process to stop server
+trap "service mysql stop" HUP INT QUIT ABRT ALRM TERM TSTP
+
+while pgrep -u mysql mysql > /dev/null; do sleep 5; done
