@@ -5,32 +5,18 @@
 export SOLIDMATTER_JUKEBOX_URL=${SOLIDMATTER_JUKEBOX_URL:-jukebox.solidmatter}
 export SOLIDMATTER_JUKEBOX_BACKEND_URL=${SOLIDMATTER_JUKEBOX_BACKEND_URL:-backend.jukebox.solidmatter}
 
-
 export DEFAULT_MYSQL_HOST=${DEFAULT_MYSQL_HOST:-localhost}
 export DEFAULT_MYSQL_PORT=${DEFAULT_MYSQL_PORT:-3306}
 export DEFAULT_MYSQL_USER=${DEFAULT_MYSQL_USER:-solidmatter}
 export DEFAULT_MYSQL_PASS=${DEFAULT_MYSQL_PASS:-solidmatter}
-#export DEFAULT_MYSQL_PASS=${DEFAULT_MYSQL_PASS:-$(pwgen -s 15 1)}
 
 export SOLIDMATTER_MYSQL_USER=${SOLIDMATTER_MYSQL_USER:-solidmatter}
 export SOLIDMATTER_MYSQL_PASS=${SOLIDMATTER_MYSQL_PASS:-solidmatter}
 export SOLIDMATTER_MYSQL_DATABASE=${SOLIDMATTER_MYSQL_DATABASE:-solidmatter}
 
-
 # run setup scripts
 run-parts --lsbsysinit --exit-on-error -- /opt/setup
 
-
-cat <<-END
-===================================================================
-MySQL user 'root' has no password but only allows local connections
-
-END
-
-#wait
-#/usr/sbin/apache2ctl -D FOREGROUND
-
-# new ...
 cat <<-END
 Starting Supervisor ...
 END
