@@ -2,11 +2,12 @@
 
 . /opt/helpers
 
-echo "=> setup solidmatter"
+echo "=> solidmatter: setup"
 
 mkdir /var/log/solidmatter
 chown www-data: /var/log/solidmatter
 
+echo "=> solidmatter: modify apache site config"
 # modify solidmatter apache site config
 sed -i -e "s#@JUKEBOX_URL@#${SOLIDMATTER_JUKEBOX_URL}#g" /etc/apache2/sites-available/solidmatter.conf
 sed -i -e "s#@JUKEBOX_BACKEND_URL@#${SOLIDMATTER_JUKEBOX_BACKEND_URL}#g" /etc/apache2/sites-available/solidmatter.conf
@@ -14,19 +15,25 @@ sed -i -e "s#@JUKEBOX_BACKEND_URL@#${SOLIDMATTER_JUKEBOX_BACKEND_URL}#g" /etc/ap
 # Enable apache solidmatter mod.
 a2ensite solidmatter
 
-
-
-#helper_mysql_root << END
-mysql << EOF
-    CREATE DATABASE IF NOT EXISTS ${SOLIDMATTER_MYSQL_DATABASE};
-    GRANT ALL
-      ON ${SOLIDMATTER_MYSQL_DATABASE}.*
-      TO '${SOLIDMATTER_MYSQL_USER}'@'localhost'
-      IDENTIFIED BY '${SOLIDMATTER_MYSQL_PASS}';
+# check if solidmatter database exists
+if [ ! -d "/var/lib/mysql/solidmatter" ]; then
+	echo "=> solidmatter: create database"
+	mysql << EOF
+	    CREATE DATABASE IF NOT EXISTS ${SOLIDMATTER_MYSQL_DATABASE};
+	    GRANT ALL
+	      ON ${SOLIDMATTER_MYSQL_DATABASE}.*
+	      TO '${SOLIDMATTER_MYSQL_USER}'@'localhost'
+	      IDENTIFIED BY '${SOLIDMATTER_MYSQL_PASS}';
 EOF
 
-mysql < /var/www/solidmatter/solidmatter.sql
+	echo "=> solidmatter: apply database dump"
+	mysql < /var/www/solidmatter/solidmatter.sql
+else
+	echo "=> solidmatter: database dump"
+
+fi
 
 # modify solidmatter interface config
+echo "=> solidmatter: modify solidmatter config"
 sed -i -e "s#@JUKEBOX_URL@#${SOLIDMATTER_JUKEBOX_URL}#g" /etc/solidmatter/interface.xml
 sed -i -e "s#@JUKEBOX_BACKEND_URL@#${SOLIDMATTER_JUKEBOX_BACKEND_URL}#g" /etc/solidmatter/interface.xml
