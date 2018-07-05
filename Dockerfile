@@ -57,5 +57,10 @@ EXPOSE 80
 # By default start up apache in the foreground, override with /bin/bash for interative.
 #CMD /usr/sbin/apache2ctl -D FOREGROUND
 
+# Add VOLUMEs to allow backup of config and databases
+#VOLUME ["/etc/mysql", "/var/lib/mysql"]
+VOLUME ["/var/lib/mysql"]
+VOLUME ["/media"]
+
 # Initialize and run Supervisor
 ENTRYPOINT ["/opt/run"]
