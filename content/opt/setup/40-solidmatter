@@ -8,10 +8,8 @@ mkdir /var/log/solidmatter
 chown www-data: /var/log/solidmatter
 
 # modify solidmatter apache site config
-sed -i -e "s#@SERVERNAME@#${SOLIDMATTER_SERVERNAME}#g" /etc/apache2/sites-available/solidmatter.conf
-sed -i -e "s#@SERVERALIAS1@#${SOLIDMATTER_SERVERALIAS1}#g" /etc/apache2/sites-available/solidmatter.conf
-sed -i -e "s#@SERVERALIAS2@#${SOLIDMATTER_SERVERALIAS2}#g" /etc/apache2/sites-available/solidmatter.conf
-sed -i -e "s#@SERVERALIAS3@#${JUKEBOX_SERVERNAME}#g" /etc/apache2/sites-available/solidmatter.conf
+sed -i -e "s#@JUKEBOX_URL@#${SOLIDMATTER_JUKEBOX_URL}#g" /etc/apache2/sites-available/solidmatter.conf
+sed -i -e "s#@JUKEBOX_BACKEND_URL@#${SOLIDMATTER_JUKEBOX_BACKEND_URL}#g" /etc/apache2/sites-available/solidmatter.conf
 
 # Enable apache solidmatter mod.
 a2ensite solidmatter
@@ -30,6 +28,5 @@ EOF
 mysql < /var/www/solidmatter/solidmatter.sql
 
 # modify solidmatter interface config
-sed -i -e "s#@SERVERALIAS1@#${SOLIDMATTER_SERVERALIAS1}#g" /etc/solidmatter/interface.xml
-sed -i -e "s#@SERVERALIAS2@#${SOLIDMATTER_SERVERALIAS2}#g" /etc/solidmatter/interface.xml
-sed -i -e "s#@JUKEBOXSERVERNAME@#${JUKEBOX_SERVERNAME}#g" /etc/solidmatter/interface.xml
+sed -i -e "s#@JUKEBOX_URL@#${SOLIDMATTER_JUKEBOX_URL}#g" /etc/solidmatter/interface.xml
+sed -i -e "s#@JUKEBOX_BACKEND_URL@#${SOLIDMATTER_JUKEBOX_BACKEND_URL}#g" /etc/solidmatter/interface.xml
