@@ -3,7 +3,7 @@
 1. Based on debian:stretch
 1. Key-Features:
    - solidmatter
-   - MySQL
+   - MariaDB (MySQL)
    - Apache2
 1. No SSH. Use docker [exec](https://docs.docker.com/engine/reference/commandline/exec/) or [nsenter](https://github.com/jpetazzo/nsenter)
 
