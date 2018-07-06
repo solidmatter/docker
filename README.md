@@ -45,5 +45,5 @@ These folders are configured and able to get mounted as volume.
 
 | Volume          | ro/rw | Description & Usage    |
 | --------------- | ----- | ---------------------- |
-| /media          | ro    | music                  |
+| /media          | rw    | music                  |
 | /var/lib/mysql  | rw    | MySQL/MariaDB Database |
