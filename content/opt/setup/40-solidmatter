@@ -9,8 +9,8 @@ chown www-data: /var/log/solidmatter
 
 echo "=> solidmatter: modify apache site config"
 # modify solidmatter apache site config
-sed -i -e "s#@JUKEBOX_URL@#${SOLIDMATTER_JUKEBOX_URL}#g" /etc/apache2/sites-available/solidmatter.conf
-sed -i -e "s#@JUKEBOX_BACKEND_URL@#${SOLIDMATTER_JUKEBOX_BACKEND_URL}#g" /etc/apache2/sites-available/solidmatter.conf
+sed -i -e "s#@SOLIDMATTER_JUKEBOX_URL@#${SOLIDMATTER_JUKEBOX_URL}#g" /etc/apache2/sites-available/solidmatter.conf
+sed -i -e "s#@SOLIDMATTER_BACKEND_URL@#${SOLIDMATTER_BACKEND_URL}#g" /etc/apache2/sites-available/solidmatter.conf
 
 # Enable apache solidmatter mod.
 a2ensite solidmatter
@@ -35,5 +35,12 @@ fi
 
 # modify solidmatter interface config
 echo "=> solidmatter: modify solidmatter config"
-sed -i -e "s#@JUKEBOX_URL@#${SOLIDMATTER_JUKEBOX_URL}#g" /etc/solidmatter/interface.xml
-sed -i -e "s#@JUKEBOX_BACKEND_URL@#${SOLIDMATTER_JUKEBOX_BACKEND_URL}#g" /etc/solidmatter/interface.xml
+sed -i -e "s#@SOLIDMATTER_JUKEBOX_URL@#${SOLIDMATTER_JUKEBOX_URL}#g" /etc/solidmatter/interface.xml
+sed -i -e "s#@SOLIDMATTER_BACKEND_URL@#${SOLIDMATTER_BACKEND_URL}#g" /etc/solidmatter/interface.xml
+
+
+# modify some background colors to differ environments ...
+if [ "${CONTAINER_ENVIRONMENT}" == "production" ]; then
+	sed -i -e "s@--highlight-color: #23C0FF@--highlight-color: #E461E4@g" /var/www/solidmatter/interface/themes/_admin/sb_system/css/styles_presets.css
+	sed -i -e "s@--hue-rotate: 290deg@--hue-rotate: 140deg@g" /var/www/solidmatter/interface/themes/_default/sb_jukebox/css/styles_colored.css
+fi

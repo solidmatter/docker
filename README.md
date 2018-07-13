@@ -34,7 +34,7 @@ docker run -i -t -p 8099:80 solidmatter /bin/bash
 | Environmental Variable            | Default Value               | Description                            |
 | --------------------------------- | --------------------------- | -------------------------------------- |
 | `SOLIDMATTER_JUKEBOX_URL`         | jukebox.solidmatter         | Set the VirtualHost Servername         |
-| `SOLIDMATTER_JUKEBOX_BACKEND_URL` | backend.jukebox.solidmatter | Set the VirtualHost Servername         |
+| `SOLIDMATTER_BACKEND_URL`         | backend.jukebox.solidmatter | Set the VirtualHost Servername         |
 | `SOLIDMATTER_MYSQL_USER`          | solidmatter                 | The MySQL user to access the database  |
 | `SOLIDMATTER_MYSQL_PASS`          | solidmatter                 | The password for the MySQL user        |
 | `SOLIDMATTER_MYSQL_DATABASE`      | solidmatter                 | The database for solidmatter           |
