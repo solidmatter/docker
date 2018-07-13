@@ -15,8 +15,10 @@ sed -i -e "s#@SOLIDMATTER_BACKEND_URL@#${SOLIDMATTER_BACKEND_URL}#g" /etc/apache
 # Enable apache solidmatter mod.
 a2ensite solidmatter
 
+DATABASE_DUMP_INSTALLED=0
 # check if solidmatter database exists
 if [ ! -d "/var/lib/mysql/solidmatter" ]; then
+	DATABASE_DUMP_INSTALLED=1
 	echo "=> solidmatter: create database"
 	mysql << EOF
 	    CREATE DATABASE IF NOT EXISTS ${SOLIDMATTER_MYSQL_DATABASE};
@@ -28,6 +30,9 @@ EOF
 
 	echo "=> solidmatter: apply database dump"
 	mysql < /var/www/solidmatter/solidmatter.sql
+
+
+
 else
 	echo "=> solidmatter: database dump"
 
@@ -43,4 +48,27 @@ sed -i -e "s#@SOLIDMATTER_BACKEND_URL@#${SOLIDMATTER_BACKEND_URL}#g" /etc/solidm
 if [ "${CONTAINER_ENVIRONMENT}" == "production" ]; then
 	sed -i -e "s@--highlight-color: #23C0FF@--highlight-color: #E461E4@g" /var/www/solidmatter/interface/themes/_admin/sb_system/css/styles_presets.css
 	sed -i -e "s@--hue-rotate: 290deg@--hue-rotate: 140deg@g" /var/www/solidmatter/interface/themes/_default/sb_jukebox/css/styles_colored.css
+fi
+
+
+/etc/init.d/apache2 reload
+
+if [ "${DATABASE_DUMP_INSTALLED}" == "1" ]; then
+
+	echo "=> solidmatter: configure jukebox stuff .. like media path"
+	USER=admin
+	PASSWORD=test
+	# for docker installation from sql dump this should be fix
+	JUKEBOX_NODE_UUID="5e97357b8be04b099c2ef20a028ee4ef"
+	MEDIA_PATH="/media"
+
+	curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
+		-d "login=${USER}&password=${PASSWORD}" \
+		-c cookie.txt \
+		${SOLIDMATTER_BACKEND_URL}/-/login/login
+
+	curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
+		-d "label=DemoJukebox&name=demojukebox&config_sourcepath=${MEDIA_PATH}&config_checkpath=${MEDIA_PATH}&config_realpath=${MEDIA_PATH}" \
+		-b cookie.txt  \
+		${SOLIDMATTER_BACKEND_URL}/${JUKEBOX_NODE_UUID}/properties/save
 fi

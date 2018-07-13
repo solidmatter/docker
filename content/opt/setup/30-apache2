@@ -9,3 +9,5 @@ chown -R www-data:www-data /var/www
 # Enable apache mods.
 a2enmod php7.0
 a2enmod rewrite
+
+/etc/init.d/apache2 start

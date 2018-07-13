@@ -20,6 +20,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
           mariadb-server \
           unzip \
           wget \
+          curl \
           supervisor \
           pwgen \
           vim \
