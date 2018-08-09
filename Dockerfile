@@ -10,11 +10,6 @@ RUN export DEBIAN_FRONTEND=noninteractive \
      && apt-get upgrade -y \
      && apt-get install -y --no-install-recommends \
           apache2 \
-          php7.0-mysql \
-          php7.0-xml \
-          php7.0-gd \
-          php-mbstring \
-          libapache2-mod-php7.0 \
           ca-certificates \
           mariadb-client \
           mariadb-server \
@@ -24,8 +19,21 @@ RUN export DEBIAN_FRONTEND=noninteractive \
           supervisor \
           pwgen \
           vim \
+		  gnupg2 \
+		  apt-transport-https \
      && apt-get clean \
      && rm -rf /var/lib/apt/lists/*
+
+RUN wget -q -O- https://packages.sury.org/php/apt.gpg | apt-key add - \
+    && echo "deb https://packages.sury.org/php/ stretch main" | tee /etc/apt/sources.list.d/php.list \
+    && apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y --no-install-recommends \
+          php7.2-mysql \
+          php7.2-xml \
+          php7.2-gd \
+          php-mbstring \
+          libapache2-mod-php7.2
 
 ARG GITREF_SOLIDMATTER=develop
 # switch default shell form /bin/sh to /bin/bash to support string replace

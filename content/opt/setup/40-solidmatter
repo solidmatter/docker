@@ -26,22 +26,24 @@ if [ ! -d "/var/lib/mysql/solidmatter" ]; then
 	      ON ${SOLIDMATTER_MYSQL_DATABASE}.*
 	      TO '${SOLIDMATTER_MYSQL_USER}'@'localhost'
 	      IDENTIFIED BY '${SOLIDMATTER_MYSQL_PASS}';
+	    FLUSH PRIVILEGES;
 EOF
 
-	echo "=> solidmatter: apply database dump"
-	mysql < /var/www/solidmatter/solidmatter.sql
 
+	DUMP_FILE="/var/www/solidmatter/solidmatter_naked.sql"
+	echo "=> solidmatter: apply database dump ($DUMP_FILE)"
+	ls /var/www/solidmatter/
 
+	mysql --database=${SOLIDMATTER_MYSQL_DATABASE} < ${DUMP_FILE}
 
 else
 	echo "=> solidmatter: database dump"
-
 fi
 
 # modify solidmatter interface config
 echo "=> solidmatter: modify solidmatter config"
-sed -i -e "s#@SOLIDMATTER_JUKEBOX_URL@#${SOLIDMATTER_JUKEBOX_URL}#g" /etc/solidmatter/interface.xml
-sed -i -e "s#@SOLIDMATTER_BACKEND_URL@#${SOLIDMATTER_BACKEND_URL}#g" /etc/solidmatter/interface.xml
+sed -i -e "s#@SOLIDMATTER_JUKEBOX_URL@#${SOLIDMATTER_JUKEBOX_URL}#g" /etc/solidmatter/configuration.xml
+sed -i -e "s#@SOLIDMATTER_BACKEND_URL@#${SOLIDMATTER_BACKEND_URL}#g" /etc/solidmatter/configuration.xml
 
 
 # modify some background colors to differ environments ...
